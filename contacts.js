@@ -6,6 +6,9 @@ const { nanoid } = require("nanoid");
 
 async function listContacts() {
   const data = await fs.readFile(contactsPath, "utf8");
+  if (!JSON.parse(data)) {
+    throw "there are no contacts";
+  }
   return JSON.parse(data);
 }
 
@@ -13,7 +16,7 @@ async function getContactById(contactId) {
   const contacts = await listContacts();
   const result = contacts.find((contact) => contact.id === String(contactId));
   if (!result) {
-    return null;
+    throw `there is no contact with id ${contactId}`;
   }
   return result;
 }
@@ -24,7 +27,7 @@ async function removeContact(contactId) {
     (contact) => contact.id === String(contactId)
   );
   if (index === -1) {
-    return null;
+    throw `there is no contact with id ${contactId}`;
   }
   const removeContact = contacts.splice(index, 1);
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));

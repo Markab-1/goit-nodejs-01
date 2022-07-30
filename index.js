@@ -37,4 +37,8 @@ const arr = hideBin(process.argv);
 
 const { argv } = yargs(arr);
 
-invokeAction(argv);
+invokeAction(argv)
+  .then((data) => {
+    return data;
+  })
+  .catch((error) => console.log(error));
